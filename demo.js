@@ -1,7 +1,7 @@
-jsPlumb.ready(function () {
+jsPlumbBrowserUI.ready(function () {
 
     // setup some defaults for jsPlumb.
-    var instance = jsPlumb.newInstance({
+    var instance = jsPlumbBrowserUI.newInstance({
         endpoint: ["Dot", {radius: 2}],
         connector:"StateMachine",
         hoverPaintStyle: {stroke: "#1e8151", strokeWidth: 2 },
