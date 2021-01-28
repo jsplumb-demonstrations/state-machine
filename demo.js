@@ -1,5 +1,7 @@
 jsPlumbBrowserUI.ready(function () {
 
+    var canvas = document.getElementById("canvas");
+
     // setup some defaults for jsPlumb.
     var instance = jsPlumbBrowserUI.newInstance({
         endpoint: ["Dot", {radius: 2}],
@@ -14,14 +16,13 @@ jsPlumbBrowserUI.ready(function () {
             } ],
              [ "Label", { label: "FOO", id: "label", cssClass: "aLabel" }]
         ],
-        container: "canvas"
+        container: canvas
     });
 
     instance.registerConnectionType("basic", { anchor:"Continuous", connector:"StateMachine" });
 
     window.jsp = instance;
 
-    var canvas = document.getElementById("canvas");
     var windows = document.querySelectorAll(".statemachine-demo .w");
 
     // bind a click listener to each connection; the connection is deleted. you could of course
