@@ -52,6 +52,7 @@
     border-radius: 0.5em;
     border: 1px solid #346789;
     cursor: pointer;
+    z-index:20;
 }
 
 .ep {
@@ -102,7 +103,7 @@
     top: 35em;
 }
 
-.dragHover {
+.jtk-drag-hover {
     border: 2px solid orange;
 }
 

@@ -4,24 +4,25 @@ jsPlumbBrowserUI.ready(function () {
 
     // setup some defaults for jsPlumb.
     var instance = jsPlumbBrowserUI.newInstance({
-        endpoint: ["Dot", {radius: 2}],
+        endpoint: {type:"Dot", options:{radius: 2}},
         connector:"StateMachine",
         hoverPaintStyle: {stroke: "#1e8151", strokeWidth: 2 },
         connectionOverlays: [
-            [ "Arrow", {
-                location: 1,
-                id: "arrow",
-                length: 14,
-                foldback: 0.8
-            } ],
-             [ "Label", { label: "FOO", id: "label", cssClass: "aLabel" }]
+            {
+                type:"Arrow",
+                options:{
+                    location: 1,
+                    id: "arrow",
+                    length: 14,
+                    foldback: 0.8
+                }
+            },
+            { type:"Label", options:{ label: "FOO", id: "label", cssClass: "aLabel" }}
         ],
         container: canvas
     });
 
     instance.registerConnectionType("basic", { anchor:"Continuous", connector:"StateMachine" });
-
-    window.jsp = instance;
 
     var windows = document.querySelectorAll(".statemachine-demo .w");
 
@@ -65,15 +66,9 @@ jsPlumbBrowserUI.ready(function () {
         });
 
         instance.makeTarget(el, {
-            dropOptions: { hoverClass: "dragHover" },
             anchor: "Continuous",
             allowLoopback: true
         });
-
-        // this is not part of the core demo functionality; it is a means for the Toolkit edition's wrapped
-        // version of this demo to find out about new nodes being added.
-        //
-        instance.fire("jsPlumbDemoNodeAdded", el);
     };
 
     var newNode = function(x, y) {
