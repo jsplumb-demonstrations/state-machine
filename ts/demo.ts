@@ -15,8 +15,6 @@ ready(() => {
     // setup some defaults for jsPlumb.
     const instance = newInstance({
         endpoint: { type:DotEndpoint.type, options:{radius: 2} },
-        connector:StateMachineConnector.type,
-        hoverPaintStyle: {stroke: "#1e8151", strokeWidth: 2 },
         connectionOverlays: [
             {
                 type:ArrowOverlay.type,
@@ -39,7 +37,13 @@ ready(() => {
         container: canvas
     })
 
-    instance.registerConnectionType(TYPE_BASIC, { anchor:ContinuousAnchor.type, connector:StateMachineConnector.type })
+    instance.registerConnectionType(TYPE_BASIC, {
+        anchor:ContinuousAnchor.type,
+        connector:StateMachineConnector.type,
+        paintStyle: { stroke: "#5c96bc", strokeWidth: 2, outlineStroke: "transparent", outlineWidth: 4 },
+        hoverPaintStyle: {stroke: "#1e8151", strokeWidth: 2 },
+
+    })
 
     const windows = document.querySelectorAll(".statemachine-demo .w")
 
@@ -63,31 +67,6 @@ ready(() => {
         newNode(e.offsetX, e.offsetY)
     })
 
-    //
-    // initialise element as connection targets and source.
-    //
-    const initNode = (el:Element) => {
-
-        instance.makeSource(el, {
-            filter: ".ep",
-            anchor: ContinuousAnchor.type,
-            connectorStyle: { stroke: "#5c96bc", strokeWidth: 2, outlineStroke: "transparent", outlineWidth: 4 },
-            connectionType:TYPE_BASIC,
-            extract:{
-                "action":"the-action"
-            },
-            maxConnections: 2,
-            onMaxConnections: function (info, e) {
-                alert("Maximum connections (" + info.maxConnections + ") reached");
-            }
-        });
-
-        instance.makeTarget(el, {
-            anchor: ContinuousAnchor.type,
-            allowLoopback: true
-        });
-    };
-
     function newNode (x:number, y:number) {
         const d = document.createElement("div")
         const id = uuid()
@@ -97,15 +76,29 @@ ready(() => {
         d.style.left = x + "px"
         d.style.top = y + "px"
         instance.getContainer().appendChild(d)
-        initNode(d)
+        instance.manage(d)
         return d
     }
 
+    instance.addSourceSelector(".ep", {
+        connectionType:"basic",
+        extract:{
+            "action":"the-action"
+        },
+        maxConnections: 2,
+        onMaxConnections: function (info, e) {
+            alert("Maximum connections (" + info.maxConnections + ") reached");
+        }
+    });
+
+    instance.addTargetSelector(".w", {
+        anchor: "Continuous",
+        allowLoopback: true
+    });
+
     // suspend drawing and initialise.
     instance.batch(function () {
-        for (let i = 0; i < windows.length; i++) {
-            initNode(windows[i])
-        }
+        instance.manageAll(windows)
         // and finally, make a few connections
         instance.connect({ source: document.getElementById("opened"), target: document.getElementById("phone1"), type:TYPE_BASIC })
         instance.connect({ source: document.getElementById("phone1"), target: document.getElementById("phone1"), type:TYPE_BASIC })
